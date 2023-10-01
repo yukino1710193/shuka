@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shuka
+spec:
+  selector:
+    app: shuka
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuka
+  labels:
+    app: shuka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuka
+  template:
+    metadata:
+      labels:
+        app: shuka
+    spec:
+      hostname: shuka
+      containers:
+      - name: shuka
+        image: docker.io/daohiep22/shuka
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: TARGET
+          value: "shuka"
+        - name: PORT
+          value: "80"
+      nodeSelector:
+        kubernetes.io/hostname: node3
+---
