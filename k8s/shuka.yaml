@@ -37,6 +37,14 @@ spec:
           value: "shuka"
         - name: PORT
           value: "80"
+        - name: PODNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODENAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
       nodeSelector:
         kubernetes.io/hostname: node3
 ---

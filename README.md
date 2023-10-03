@@ -17,6 +17,8 @@ Shuka là ứng dụng Web đơn giản, có thể sử dụng như một Single
 | TARGET | Kết quả trả về khi thực hiện HTTP request tới URI / | Konnichiwa |
 | PORT | Cổng hoạt động của Webserver | 80 |
 | NEXT | khi thực hiện HTTP request tới URI /chain hoặc /chain/<param>, request sẽ được chuyển tiếp tới địa chỉ NEXT. Nếu không chỉ định gì sẽ chuyển tiếp tới chính khối Shuka hiện tại vào URI / | "" |
+| PODNAME | Tên của Pod chạy Shuka, được truyền vào qua file .yaml | "" |
+| NODENAME | Tên của Node chạy Shuka, được truyền vào qua file .yaml | "" |
 
 ### 2.2. URIs and Functions
 
@@ -69,4 +71,5 @@ Phòng nghiên cứu Mạng máy tính Future Internet Laboratory, Phòng 618 Th
 
 ## 5. History
 
-v1.0 - Shuka with plugable ability to other Shuka
+v1.1 - Add env variable PODNAME and NODENAME  
+v1.0 - Shuka with plugable ability to other Shuka  

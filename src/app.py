@@ -6,12 +6,17 @@ app = Flask(__name__)
 TARGET = os.environ.get('TARGET', 'Konnichiwa')
 PORT = os.environ.get('PORT', 80)
 NEXT = os.environ.get('NEXT', "")
+PODNAME = os.environ.get('PODNAME', "")
+NODENAME = os.environ.get('NODENAME', "")
 
 
 
 @app.route("/")
 def index():
-    response = Response(f"{TARGET}\n")
+    if PODNAME or NODENAME:
+        response = Response(f"{TARGET} from {PODNAME} in {NODENAME}\n")
+    else:
+        response = Response(f"{TARGET}\n")
     response.headers["app"] = "shuka"
     return response
 
