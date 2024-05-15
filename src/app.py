@@ -1,5 +1,5 @@
 from flask import Flask, Response
-import os, requests
+import os, requests, time
 
 app = Flask(__name__)
 
@@ -19,6 +19,13 @@ def index():
         response = Response(f"{TARGET}\n")
     response.headers["app"] = "shuka"
     return response
+
+
+
+@app.route("/sleep/<sleepTime>")
+def sleep(sleepTime):
+    time.sleep(int(sleepTime))
+    return f"Shuka wa {sleepTime} byougo ni mezameta"
 
 
 
