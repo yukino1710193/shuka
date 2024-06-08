@@ -24,8 +24,8 @@ def index():
 
 @app.route("/sleep/<sleepTime>")
 def sleep(sleepTime):
-    time.sleep(int(sleepTime))
-    return f"Shuka wa {sleepTime} byougo ni mezameta"
+    time.sleep(int(sleepTime)/1000)
+    return f"Shuka wa {int(sleepTime)/1000} byougo ni mezameta"
 
 
 
