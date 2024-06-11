@@ -1,5 +1,5 @@
 from flask import Flask, Response
-import os, requests, time
+import os, requests, time, datetime
 
 app = Flask(__name__)
 
@@ -24,8 +24,10 @@ def index():
 
 @app.route("/sleep/<sleepTime>")
 def sleep(sleepTime):
+    startTime = datetime.datetime.now()
     time.sleep(int(sleepTime)/1000)
-    return f"Shuka wa {int(sleepTime)/1000} byougo ni mezameta"
+    endTime = datetime.datetime.now()
+    return f"Shuka wa {(endTime - startTime).total_seconds()} byougo ni mezameta"
 
 
 
@@ -66,4 +68,6 @@ def chain():
 
 
 if __name__ == "__main__":
+    print(PORT)
     app.run(debug=True,host='127.0.0.1',port=int(PORT))
+    
