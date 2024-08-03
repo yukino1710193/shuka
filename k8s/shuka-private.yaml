@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shuka-private
+spec:
+  selector:
+    app: shuka-private
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJib25hdmFkZXVyIiwicGFzc3dvcmQiOiJkY2tyX3BhdF85ejJPZTAtUkNSR2pHaGxkQjRwX1RPcDJRczQiLCJlbWFpbCI6ImRhb2RhaWhpZXAyMnVzc3JAZ21haWwuY29tIiwiYXV0aCI6IlltOXVZWFpoWkdWMWNqcGtZMnR5WDNCaGRGODVlakpQWlRBdFVrTlNSMnBIYUd4a1FqUndYMVJQY0RKUmN6UT0ifX19
+kind: Secret
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"Secret","apiVersion":"v1","metadata":{"name":"shuka-private","creationTimestamp":null},"data":{".dockerconfigjson":"eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJib25hdmFkZXVyIiwicGFzc3dvcmQiOiJkY2tyX3BhdF85ejJPZTAtUkNSR2pHaGxkQjRwX1RPcDJRczQiLCJlbWFpbCI6ImRhb2RhaWhpZXAyMnVzc3JAZ21haWwuY29tIiwiYXV0aCI6IlltOXVZWFpoWkdWMWNqcGtZMnR5WDNCaGRGODVlakpQWlRBdFVrTlNSMnBIYUd4a1FqUndYMVJQY0RKUmN6UT0ifX19"},"type":"kubernetes.io/dockerconfigjson"}
+  name: shuka-private
+  namespace: default
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuka-private
+  labels:
+    app: shuka-private
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuka-private
+  template:
+    metadata:
+      labels:
+        app: shuka-private
+    spec:
+      hostname: shuka-private
+      containers:
+      - name: shuka-private
+        image: docker.io/bonavadeur/shuka-private:latest
+        # command: ["/bin/sh", "startup.sh", "hello"]
+        # command: ["/bin/sh"]
+        # args: ["startup.sh", "hello"]
+        # imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: TARGET
+          value: "shuka-private"
+        - name: PORT
+          value: "80"
+        - name: PODNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODENAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+      nodeSelector:
+        kubernetes.io/hostname: node1
+      imagePullSecrets:
+      - name: shuka-private
+---

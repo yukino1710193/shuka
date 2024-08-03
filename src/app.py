@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, jsonify, request
 import os, requests, time, datetime
 
 app = Flask(__name__)
@@ -22,12 +22,40 @@ def index():
 
 
 
+@app.route("/nodename")
+def getNodeName():
+    if NODENAME:
+        response = Response(f"{NODENAME}\n")
+    else:
+        response = Response(f"{TARGET}\n")
+    response.headers["app"] = "shuka"
+    return response
+
+
+
 @app.route("/sleep/<sleepTime>")
 def sleep(sleepTime):
+    print(f"Shuka starts sleep in {int(sleepTime)/1000} seconds")
     startTime = datetime.datetime.now()
     time.sleep(int(sleepTime)/1000)
     endTime = datetime.datetime.now()
+    print(f"Shuka ends sleep after {int(sleepTime)/1000} seconds")
     return f"Shuka wa {(endTime - startTime).total_seconds()} byougo ni mezameta"
+
+
+
+@app.route("/probe")
+def probe():
+    if request.headers.get("healthcheck") is None:
+        return jsonify({"message": "ready"}), 200
+    if request.headers.get("healthcheck") == "success":
+        return jsonify({"message": "success"}), 200
+    if request.headers.get("healthcheck") == "failed":
+        return jsonify({"message": "failed"}), 500
+    # if status == "ready":
+    #     return jsonify({"message": "ready"}), 200
+    # if status == "failed":
+    #     return jsonify({"message": "failed"}), 500
 
 
 

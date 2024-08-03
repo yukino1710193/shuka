@@ -19,6 +19,7 @@ Shuka là ứng dụng Web đơn giản, có thể sử dụng như một Single
 | NEXT | khi thực hiện HTTP request tới URI /chain hoặc /chain/<param>, request sẽ được chuyển tiếp tới địa chỉ NEXT. Nếu không chỉ định gì sẽ chuyển tiếp tới chính khối Shuka hiện tại vào URI / | "" |
 | PODNAME | Tên của Pod chạy Shuka, được truyền vào qua file .yaml | "" |
 | NODENAME | Tên của Node chạy Shuka, được truyền vào qua file .yaml | "" |
+| THREADS | Số luồng được Shuka dùng để xử lí requests | "8" |
 
 ### 2.2. URIs and Functions
 
@@ -28,15 +29,16 @@ Shuka là ứng dụng Web đơn giản, có thể sử dụng như một Single
 | --- | --- | --- |
 | / | index() | trả về giá trị **TARGET**, request trả về |
 | /chain | chain () | chuyển tiếp request tới khối Shuka tiếp theo, được cấu hình trong **NEXT**. Khi request đi đến cuối chuỗi Shuka, **chain()** gọi tới **index()** |
-| /chain/$tag | chain_tag(tag: str) | tương tự như /chain, nhưng request chuyển tiếp được thêm trường **tag: $tag** trong HTTP header. example: /chain/edge, HTTP header sẽ có thêm trường **tag: edge**
-| /hometag/$tag | home_tag(tag: str) | khi đến cuối chuỗi Shuka, **chain_tag()** sẽ gọi tới **home_tag()** thay vì **index()**
+| /chain/&lt;tag> | chain_tag(tag: str) | tương tự như /chain, nhưng request chuyển tiếp được thêm trường **tag: $tag** trong HTTP header. example: /chain/edge, HTTP header sẽ có thêm trường **tag: edge**
+| /hometag/&lt;tag> | home_tag(tag: str) | khi đến cuối chuỗi Shuka, **chain_tag()** sẽ gọi tới **home_tag()** thay vì **index()**
+| /sleep/&lt;sleepTime> | sleep(sleepTime: str) | thời gian Shuka-chan ngủ (fake request processing), tính bằng miliseconds
 
 ### 2.3. Build Docker image
 
 ```bash
 cd src
-docker build -t <docker_repo>:shuka .
-docker push <docker_repo>:shuka
+docker build -t <docker_repo>/shuka:<tag> .
+docker push <docker_repo>/shuka:<tag>
 ```
 
 ### 2.4. Using as Single Service
@@ -71,5 +73,7 @@ Phòng nghiên cứu Mạng máy tính Future Internet Laboratory, Phòng 618 Th
 
 ## 5. History
 
+v1.3 - Shuka threads  
+v1.2 - Shuka sleep  
 v1.1 - Add env variable PODNAME and NODENAME  
 v1.0 - Shuka with plugable ability to other Shuka  

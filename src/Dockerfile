@@ -19,7 +19,10 @@ RUN pip install requests
 # to be equal to the cores available.
 
 ENV PORT=${PORT:-80}
+# ENV THREADS=${THREADS:-8}
 
-COPY . ./
+COPY ./* ./
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+RUN chmod +x *.sh
+
+CMD exec gunicorn --bind :$PORT --workers=1 --threads=${THREADS:-8} --timeout 0 app:app
