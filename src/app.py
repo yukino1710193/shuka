@@ -1,5 +1,12 @@
-from flask import Flask, Response, jsonify, request
-import os, requests, time, datetime
+from flask import Flask, Response, jsonify, request, g
+import os, requests, time, datetime, logging
+
+# Cấu hình logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] [%(levelname)s] %(message)s'
+)
+logger = logging.getLogger("shuka")
 
 app = Flask(__name__)
 
@@ -10,6 +17,17 @@ PODNAME = os.environ.get('PODNAME', "")
 NODENAME = os.environ.get('NODENAME', "")
 
 
+@app.before_request
+def start_timer():
+    g.start_time = time.time()
+
+@app.after_request
+def add_processing_time(response):
+    if hasattr(g, 'start_time'):
+        duration = time.time() - g.start_time
+        logger.info(f"{request.method} {request.path} took {duration:.9f} seconds from {request.remote_addr}")
+        response.headers["Shuka-Processing-Time"] = f"{duration:.9f}s"
+    return response
 
 @app.route("/")
 def index():
@@ -17,7 +35,7 @@ def index():
         response = Response(f"{TARGET} from {PODNAME} in {NODENAME}\n")
     else:
         response = Response(f"{TARGET}\n")
-    response.headers["app"] = "shuka"
+    response.headers["app"] = "shuka-yukino"
     return response
 
 
